@@ -5,6 +5,8 @@ using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
 using ShopTARgv24.Models.RealEstate;
 using ShopTARgv24.Models.Spaceships;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace ShopTARgv24.Controllers
 {
@@ -173,6 +175,18 @@ namespace ShopTARgv24.Controllers
                 return NotFound();
             }
 
+
+            var photos = await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new RealEstateImageViewModel
+                {
+                    RealEstateId = y.Id,
+                    Id = y.Id,
+                    ImageData = y.ImageData,
+                    ImageTitle = y.ImageTitle,
+                    Image = string.Format("data:image/gif;base64,{0}", Convert.ToBase64String(y.ImageData))
+                }).ToArrayAsync();
+
             var vm = new RealEstateDetailsViewModel();
 
             vm.Id = realEstate.Id;
@@ -182,6 +196,9 @@ namespace ShopTARgv24.Controllers
             vm.Location = realEstate.Location;
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.Image.AddRange(photos);
+
+
 
             return View(vm);
         }
