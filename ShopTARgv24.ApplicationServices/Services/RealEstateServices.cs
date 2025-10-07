@@ -26,7 +26,7 @@ namespace ShopTARgv24.ApplicationServices.Services
         {
             RealEstate domain = new RealEstate();
 
-            domain.Id = dto.Id;
+            domain.Id = Guid.NewGuid();
             domain.Area = dto.Area;
             domain.Location = dto.Location;
             domain.RoomNumber = dto.RoomNumber;
@@ -34,7 +34,6 @@ namespace ShopTARgv24.ApplicationServices.Services
             domain.CreatedAt = DateTime.Now;
             domain.ModifiedAt = DateTime.Now;
 
-            //peaks kontrollima, kas on faile v]i ei ole
             if (dto.Files != null)
             {
                 _fileServices.UploadFilesToDatabase(dto, domain);
