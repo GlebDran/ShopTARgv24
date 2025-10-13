@@ -12,11 +12,7 @@ using ShopTARgv24.Data;
 namespace ShopTARgv24.Data.Migrations
 {
     [DbContext(typeof(ShopTARgv24Context))]
-<<<<<<<< HEAD:ShopTARgv24.Data/Migrations/20251013102801_InitialCreate.Designer.cs
-    [Migration("20251013102801_InitialCreate")]
-========
-    [Migration("20251013095633_InitialCreate")]
->>>>>>>> 0ca1f58a8c794abf359581575ab7d555dada08b6:ShopTARgv24.Data/Migrations/20251013095633_InitialCreate.Designer.cs
+    [Migration("20251013120644_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

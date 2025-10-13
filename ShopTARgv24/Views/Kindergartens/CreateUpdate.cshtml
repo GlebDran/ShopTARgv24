@@ -1,4 +1,4 @@
-﻿﻿@model ShopTARgv24.Models.Kindergartens.KindergartenCreateUpdateViewModel
+﻿@model ShopTARgv24.Models.Kindergartens.KindergartenCreateUpdateViewModel
 
 @{
     var isUpdate = Model.Id.HasValue;
@@ -69,7 +69,7 @@
                         <a asp-action="Index" asp-controller="Kindergartens" class="btn btn-secondary ms-2">Back</a>
                     </div>
                 </form>
-           
+
                 @if (Model.Image != null && Model.Image.Length > 0)
                 {
                     <hr />
@@ -80,9 +80,9 @@
                         {
                             <div class="position-relative me-4 mb-4">
 
-                              <partial name="_Images" model="img" />
+                                <partial name="_Images" model="img" />
 
-                               <form asp-action="RemoveImage" asp-controller="Kindergartens" method="post"
+                                <form asp-action="RemoveImage" asp-controller="Kindergartens" method="post"
                                       class="position-absolute"
                                       style="top:-10px; left: -10px;">
                                     @Html.AntiForgeryToken()
