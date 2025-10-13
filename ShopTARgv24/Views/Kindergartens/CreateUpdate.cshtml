@@ -84,14 +84,25 @@
 
                                 <form asp-action="RemoveImage" asp-controller="Kindergartens" method="post"
                                       class="position-absolute"
-                                      style="top:-10px; left: -10px;">
+                                      style="top: 8px; right: 8px;">
                                     @Html.AntiForgeryToken()
                                     <input type="hidden" name="ImageId" value="@img.ImageId" />
                                     <input type="hidden" name="KindergartenId" value="@img.KindergartenId" />
                                     <button type="submit"
-                                            class="btn btn-sm"
-                                            style="background:#6f42c1;color:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(111,66,193,.35);">
-                                        Delete
+                                            class="btn btn-dark d-flex align-items-center justify-content-center"
+                                            title="Delete image"
+                                            style="
+                                    width: 28px;
+                                    height: 28px;
+                                    border-radius: 50%;
+                                    background-color: rgba(0, 0, 0, 0.5);
+                                    border: none;
+                                    color: #fff;
+                                    font-size: 16px;
+                                    line-height: 1;
+                                    padding: 0;
+                                 ">
+                                        &times;
                                     </button>
                                 </form>
                             </div>
