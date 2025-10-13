@@ -1,8 +1,4 @@
 ﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDetailsViewModel
-@{
-    var rowNumber = 1;
-}
-
 
 <div class="container mt-5">
     <div class="col-lg-8 mx-auto">
@@ -61,6 +57,11 @@
                         @Html.DisplayFor(Model => Model.UpdatedAt)
                     </div>
                 </dl>
+                @foreach (var images in Model.Image)
+                {
+                    <partial name="_Images" model="images" />
+                    <br />
+                }
                 <a asp-action="Index" asp-controller="kindergartens" class="btn btn-secondary m-2">Back</a>
             </div>
         </div>

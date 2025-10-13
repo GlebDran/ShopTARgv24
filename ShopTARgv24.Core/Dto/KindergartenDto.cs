@@ -9,6 +9,9 @@ namespace ShopTARgv24.Core.Dto
         public int? ChildrenCount { get; set; }
         public string? KindergartenName { get; set; }
         public string? TeacherName { get; set; }
+        public List<IFormFile> Files { get; set; }
+        public IEnumerable<FileToDatabaseDto> Image { get; set; }
+            = new List<FileToDatabaseDto>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }

@@ -60,6 +60,31 @@ namespace ShopTARgv24.Data.Migrations
                 {
                     table.PrimaryKey("PK_Spaceships", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "KindergartenFileToDatabase",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ImageTitle = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    KindergartenId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_KindergartenFileToDatabase", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_KindergartenFileToDatabase_Kindergartens_KindergartenId",
+                        column: x => x.KindergartenId,
+                        principalTable: "Kindergartens",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_KindergartenFileToDatabase_KindergartenId",
+                table: "KindergartenFileToDatabase",
+                column: "KindergartenId");
         }
 
         /// <inheritdoc />
@@ -69,10 +94,13 @@ namespace ShopTARgv24.Data.Migrations
                 name: "FileToApis");
 
             migrationBuilder.DropTable(
-                name: "Kindergartens");
+                name: "KindergartenFileToDatabase");
 
             migrationBuilder.DropTable(
                 name: "Spaceships");
+
+            migrationBuilder.DropTable(
+                name: "Kindergartens");
         }
     }
 }

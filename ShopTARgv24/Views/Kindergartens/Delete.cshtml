@@ -1,14 +1,10 @@
-﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDeleteViewModel
-@{
-    var rowNumber = 1;
-}
-
+﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDetailsViewModel
 
 <div class="container mt-5">
     <div class="col-lg-8 mx-auto">
         <div class="card shadow-lg border-0 rounded-3">
-            <div class="card-header bg-danger text-white text-center">
-                <h1>Delete</h1>
+            <div class="card-header bg-info text-white text-center">
+                <h1>Details</h1>
             </div>
             <div class="card-body p-4">
                 <h4>Kindergarten</h4>
@@ -61,11 +57,12 @@
                         @Html.DisplayFor(Model => Model.UpdatedAt)
                     </div>
                 </dl>
-                <form asp-action="DeleteConfirmation">
-                    <input type="hidden" asp-for="Id" />
-                    <input type="submit" value="Delete" class="btn btn-danger m-2" />
-                    <a asp-action="Index" asp-controller="kindergartens" class="btn btn-secondary m-2">Back</a>
-                </form>
+                @foreach (var images in Model.Image)
+                {
+                    <partial name="_Images" model="images" />
+                    <br />
+                }
+                <a asp-action="Index" asp-controller="kindergartens" class="btn btn-secondary m-2">Back</a>
             </div>
         </div>
     </div>

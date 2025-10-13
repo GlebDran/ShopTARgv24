@@ -12,7 +12,11 @@ using ShopTARgv24.Data;
 namespace ShopTARgv24.Data.Migrations
 {
     [DbContext(typeof(ShopTARgv24Context))]
+<<<<<<<< HEAD:ShopTARgv24.Data/Migrations/20251013102801_InitialCreate.Designer.cs
     [Migration("20251013102801_InitialCreate")]
+========
+    [Migration("20251013095633_InitialCreate")]
+>>>>>>>> 0ca1f58a8c794abf359581575ab7d555dada08b6:ShopTARgv24.Data/Migrations/20251013095633_InitialCreate.Designer.cs
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -40,6 +44,28 @@ namespace ShopTARgv24.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FileToApis");
+                });
+
+            modelBuilder.Entity("ShopTARgv24.Core.Domain.FileToDatabase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("KindergartenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KindergartenId");
+
+                    b.ToTable("KindergartenFileToDatabase");
                 });
 
             modelBuilder.Entity("ShopTARgv24.Core.Domain.Kindergarten", b =>
@@ -107,6 +133,21 @@ namespace ShopTARgv24.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Spaceships");
+                });
+
+            modelBuilder.Entity("ShopTARgv24.Core.Domain.FileToDatabase", b =>
+                {
+                    b.HasOne("ShopTARgv24.Core.Domain.Kindergarten", "Kindergarten")
+                        .WithMany("Files")
+                        .HasForeignKey("KindergartenId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Kindergarten");
+                });
+
+            modelBuilder.Entity("ShopTARgv24.Core.Domain.Kindergarten", b =>
+                {
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }

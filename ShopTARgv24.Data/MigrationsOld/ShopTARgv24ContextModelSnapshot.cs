@@ -39,6 +39,28 @@ namespace ShopTARgv24.Data.Migrations
                     b.ToTable("FileToApis");
                 });
 
+            modelBuilder.Entity("ShopTARgv24.Core.Domain.FileToDatabase", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("ImageData")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ImageTitle")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("KindergartenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KindergartenId");
+
+                    b.ToTable("KindergartenFileToDatabase");
+                });
+
             modelBuilder.Entity("ShopTARgv24.Core.Domain.Kindergarten", b =>
                 {
                     b.Property<Guid>("Id")
@@ -104,6 +126,21 @@ namespace ShopTARgv24.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Spaceships");
+                });
+
+            modelBuilder.Entity("ShopTARgv24.Core.Domain.FileToDatabase", b =>
+                {
+                    b.HasOne("ShopTARgv24.Core.Domain.Kindergarten", "Kindergarten")
+                        .WithMany("Files")
+                        .HasForeignKey("KindergartenId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.Navigation("Kindergarten");
+                });
+
+            modelBuilder.Entity("ShopTARgv24.Core.Domain.Kindergarten", b =>
+                {
+                    b.Navigation("Files");
                 });
 #pragma warning restore 612, 618
         }
