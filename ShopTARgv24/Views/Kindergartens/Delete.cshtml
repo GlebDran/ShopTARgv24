@@ -1,68 +1,69 @@
-﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDetailsViewModel
+﻿﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDeleteViewModel
 
 <div class="container mt-5">
     <div class="col-lg-8 mx-auto">
         <div class="card shadow-lg border-0 rounded-3">
-            <div class="card-header bg-info text-white text-center">
-                <h1>Details</h1>
+            <div class="card-header bg-danger text-white text-center">
+                <h1>Delete</h1>
+                <p class="mb-0">Kas olete kindel, et soovite selle kirje kustutada?</p>
             </div>
+
             <div class="card-body p-4">
-                <h4>Kindergarten</h4>
-                <hr />
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="Id" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.Id)
+                        @Html.DisplayFor(m => m.Id)
                     </div>
                 </dl>
 
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="GroupName" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.GroupName)
+                        @Html.DisplayFor(m => m.GroupName)
                     </div>
                 </dl>
 
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="ChildrenCount" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.ChildrenCount)
+                        @Html.DisplayFor(m => m.ChildrenCount)
                     </div>
                 </dl>
 
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="KindergartenName" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.KindergartenName)
+                        @Html.DisplayFor(m => m.KindergartenName)
                     </div>
                 </dl>
 
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="TeacherName" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.TeacherName)
+                        @Html.DisplayFor(m => m.TeacherName)
                     </div>
                 </dl>
 
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="CreatedAt" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.CreatedAt)
+                        @Html.DisplayFor(m => m.CreatedAt)
                     </div>
                 </dl>
 
                 <dl class="row">
                     <div class="form-group row">
                         <label asp-for="UpdatedAt" class="col-sm-3 col-form-label fw-bold"></label>
-                        @Html.DisplayFor(Model => Model.UpdatedAt)
+                        @Html.DisplayFor(m => m.UpdatedAt)
                     </div>
                 </dl>
-                @foreach (var images in Model.Image)
-                {
-                    <partial name="_Images" model="images" />
-                    <br />
-                }
-                <a asp-action="Index" asp-controller="kindergartens" class="btn btn-secondary m-2">Back</a>
+
+                <form asp-action="DeleteConfirmation" asp-controller="Kindergartens" method="post">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="Id" type="hidden" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <a asp-action="Index" asp-controller="Kindergartens" class="btn btn-secondary ms-2">Cancel</a>
+                </form>
             </div>
         </div>
     </div>

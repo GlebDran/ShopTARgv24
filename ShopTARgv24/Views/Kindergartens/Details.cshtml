@@ -1,4 +1,4 @@
-﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDetailsViewModel
+﻿﻿@model ShopTARgv24.Models.Kindergartens.KindergartenDetailsViewModel
 
 <div class="container mt-5">
     <div class="col-lg-8 mx-auto">
@@ -57,12 +57,24 @@
                         @Html.DisplayFor(Model => Model.UpdatedAt)
                     </div>
                 </dl>
-                @foreach (var images in Model.Image)
+
+                <hr />
+                <h5>Images</h5>
+
+                @if (Model.Image != null && Model.Image.Any())
                 {
-                    <partial name="_Images" model="images" />
-                    <br />
+                    foreach (var images in Model.Image)
+                    {
+                        <partial name="_Images" model="images" />
+                        <br />
+                    }
                 }
-                <a asp-action="Index" asp-controller="kindergartens" class="btn btn-secondary m-2">Back</a>
+                else
+                {
+                    <p class="text-muted">Pilte pole lisatud.</p>
+                }
+
+                <a asp-action="Index" asp-controller="Kindergartens" class="btn btn-secondary m-2">Back</a>
             </div>
         </div>
     </div>

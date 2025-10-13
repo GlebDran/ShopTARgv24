@@ -4,6 +4,9 @@ using ShopTARgv24.Core.Dto;
 using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
 using ShopTARgv24.Models.Kindergartens;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ShopTARgv24.Controllers
 {
@@ -68,7 +71,6 @@ namespace ShopTARgv24.Controllers
             if (created == null)
                 return RedirectToAction(nameof(Index));
 
-            // <<<<<< ВАЖНО: Guid? -> Guid >>>>>
             if (vm.Files != null && vm.Files.Count > 0 && created.Id.HasValue)
                 await _fileServices.SaveToDatabaseAsync(vm.Files, created.Id.Value);
 
@@ -119,14 +121,13 @@ namespace ShopTARgv24.Controllers
             if (updated == null)
                 return RedirectToAction(nameof(Index));
 
-            // <<<<<< fix: используем updated и распаковываем Guid? >>>>>
             if (vm.Files != null && vm.Files.Count > 0 && updated.Id.HasValue)
                 await _fileServices.SaveToDatabaseAsync(vm.Files, updated.Id.Value);
 
             return RedirectToAction(nameof(Update), new { id = updated.Id });
         }
 
-        // DELETE
+        // DELETE (GET)
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -147,10 +148,22 @@ namespace ShopTARgv24.Controllers
             return View(vm);
         }
 
+        // DELETE (POST) — удаляем всё: сначала изображения, потом запись
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmation(Guid id)
         {
+            // 1) удалить все изображения, связанные с анкетой
+            var images = await _context.KindergartenFileToDatabase
+                .Where(x => x.KindergartenId == id)
+                .ToListAsync();
+
+            if (images.Any())
+            {
+                await _fileServices.RemoveImagesFromDatabase(images);
+            }
+
+            // 2) удалить саму анкету
             var kindergarten = await _kindergartenServices.Delete(id);
             if (kindergarten != null)
                 return RedirectToAction(nameof(Index));
@@ -173,15 +186,17 @@ namespace ShopTARgv24.Controllers
                 KindergartenName = kindergarten.KindergartenName,
                 TeacherName = kindergarten.TeacherName,
                 CreatedAt = kindergarten.CreatedAt,
-                UpdatedAt = kindergarten.UpdatedAt
+                UpdatedAt = kindergarten.UpdatedAt,
+                Image = await FilesFromDatabase(id)
             };
 
             return View(vm);
         }
 
+        // Картинки из БД (массив)
         public async Task<KindergartenImageViewModel[]> FilesFromDatabase(Guid id)
         {
-            var images = await _context.KindergartenFileToDatabase
+            return await _context.KindergartenFileToDatabase
                 .Where(x => x.KindergartenId == id)
                 .Select(y => new KindergartenImageViewModel
                 {
@@ -189,10 +204,9 @@ namespace ShopTARgv24.Controllers
                     ImageId = y.Id,
                     ImageData = y.ImageData,
                     ImageTitle = y.ImageTitle,
-                    Image = string.Format("data:image/gif;base64, {0}", Convert.ToBase64String(y.ImageData))
-                }).ToArrayAsync();
-
-            return images;
+                    Image = $"data:image/jpeg;base64,{Convert.ToBase64String(y.ImageData)}"
+                })
+                .ToArrayAsync();
         }
 
         [HttpPost]

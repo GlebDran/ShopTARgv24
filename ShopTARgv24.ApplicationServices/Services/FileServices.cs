@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -19,6 +23,7 @@ namespace ShopTARgv24.ApplicationServices.Services
             _context = context;
             _webHost = webHost;
         }
+
         public async Task FilesToApi(SpaceshipDto dto, Spaceship spaceship)
         {
             if (dto?.Files == null || dto.Files.Count == 0)
@@ -30,7 +35,8 @@ namespace ShopTARgv24.ApplicationServices.Services
 
             foreach (var file in dto.Files.Where(f => f != null && f.Length > 0))
             {
-                var uniqueFileName = $"{Guid.NewGuid()}_{Path.GetFileName(file.FileName)}";
+                var safeName = Path.GetFileName(file.FileName);
+                var uniqueFileName = $"{Guid.NewGuid()}_{safeName}";
                 var filePath = Path.Combine(uploadRoot, uniqueFileName);
 
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -55,7 +61,7 @@ namespace ShopTARgv24.ApplicationServices.Services
         {
             if (files == null) return;
 
-            foreach (var file in files.Where(f => f != null && f.Length > 0))
+            foreach (var file in files.Where(f => f is { Length: > 0 }))
             {
                 using var ms = new MemoryStream();
                 await file.CopyToAsync(ms);
@@ -74,10 +80,9 @@ namespace ShopTARgv24.ApplicationServices.Services
             await _context.SaveChangesAsync();
         }
 
-       public void UploadFilesToDatabase(KindergartenDto dto, Kindergarten domain)
+        public void UploadFilesToDatabase(KindergartenDto dto, Kindergarten domain)
         {
             if (dto?.Files == null || dto.Files.Count == 0) return;
-
 
             if (domain.Id is Guid kgId)
                 SaveToDatabaseAsync(dto.Files, kgId).GetAwaiter().GetResult();
@@ -94,8 +99,10 @@ namespace ShopTARgv24.ApplicationServices.Services
             await _context.SaveChangesAsync();
             return image;
         }
+
         public async Task RemoveImagesFromDatabase(IEnumerable<FileToDatabase> images)
         {
+            if (images == null) return;
             _context.KindergartenFileToDatabase.RemoveRange(images);
             await _context.SaveChangesAsync();
         }
@@ -115,6 +122,18 @@ namespace ShopTARgv24.ApplicationServices.Services
 
             await _context.SaveChangesAsync();
             return null;
+        }
+
+        public async Task RemoveAllForKindergartenAsync(Guid kindergartenId)
+        {
+            var images = await _context.KindergartenFileToDatabase
+                .Where(x => x.KindergartenId == kindergartenId)
+                .ToListAsync();
+
+            if (images.Count == 0) return;
+
+            _context.KindergartenFileToDatabase.RemoveRange(images);
+            await _context.SaveChangesAsync();
         }
     }
 }

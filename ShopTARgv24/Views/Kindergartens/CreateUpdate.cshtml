@@ -1,14 +1,21 @@
-﻿@model ShopTARgv24.Models.Kindergartens.KindergartenCreateUpdateViewModel
+﻿﻿@model ShopTARgv24.Models.Kindergartens.KindergartenCreateUpdateViewModel
+
+@{
+    var isUpdate = Model.Id.HasValue;
+    var actionName = isUpdate ? "Update" : "Create";
+}
 
 <div class="container mt-5">
     <div class="col-lg-8 mx-auto">
         <div class="card shadow-lg border-0 rounded-3">
-            <div class="card-header @(Model.Id.HasValue ? "bg-primary" : "bg-success") text-white text-center">
-                <h1>@(Model.Id.HasValue ? "Update" : "Create")</h1>
+
+            <div class="card-header @(isUpdate ? "bg-primary" : "bg-success") text-white text-center">
+                <h1>@(isUpdate ? "Update" : "Create")</h1>
             </div>
 
             <div class="card-body p-4">
-                <form method="post" enctype="multipart/form-data">
+
+                <form asp-action="@actionName" asp-controller="Kindergartens" method="post" enctype="multipart/form-data" class="mb-4">
                     @Html.AntiForgeryToken()
 
                     <input asp-for="Id" type="hidden" />
@@ -19,6 +26,7 @@
                         <label asp-for="GroupName" class="col-sm-3 col-form-label">Group name</label>
                         <div class="col-sm-9">
                             <input asp-for="GroupName" class="form-control" />
+                            <span asp-validation-for="GroupName" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -26,6 +34,7 @@
                         <label asp-for="ChildrenCount" class="col-sm-3 col-form-label">Children count</label>
                         <div class="col-sm-9">
                             <input asp-for="ChildrenCount" class="form-control" />
+                            <span asp-validation-for="ChildrenCount" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -33,6 +42,7 @@
                         <label asp-for="KindergartenName" class="col-sm-3 col-form-label">Kindergarten name</label>
                         <div class="col-sm-9">
                             <input asp-for="KindergartenName" class="form-control" />
+                            <span asp-validation-for="KindergartenName" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -40,6 +50,7 @@
                         <label asp-for="TeacherName" class="col-sm-3 col-form-label">Teacher name</label>
                         <div class="col-sm-9">
                             <input asp-for="TeacherName" class="form-control" />
+                            <span asp-validation-for="TeacherName" class="text-danger"></span>
                         </div>
                     </div>
 
@@ -47,41 +58,51 @@
                         <label asp-for="Files" class="col-sm-3 col-form-label">Images</label>
                         <div class="col-sm-9">
                             <input class="form-control" asp-for="Files" multiple type="file" />
+                            <span asp-validation-for="Files" class="text-danger"></span>
                         </div>
                     </div>
 
                     <div class="m-3">
-                        @if (Model.Image != null && Model.Image.Length > 0)
-                        {
-                            foreach (var images in Model.Image)
-                            {
-                                <div class="d-flex align-items-center mb-3">
-                                    <partial name="_Images" model="images" />
+                        <button type="submit" class="btn btn-success">
+                            @(isUpdate ? "Update" : "Create")
+                        </button>
+                        <a asp-action="Index" asp-controller="Kindergartens" class="btn btn-secondary ms-2">Back</a>
+                    </div>
+                </form>
+           
+                @if (Model.Image != null && Model.Image.Length > 0)
+                {
+                    <hr />
+                    <h5>Images</h5>
 
-                                    <!-- отдельная мини-форма для удаления одной картинки -->
-                                    <form asp-action="RemoveImage" asp-controller="Kindergartens" method="post" class="ms-3">
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="ImageId" value="@images.ImageId" />
-                                        <input type="hidden" name="KindergartenId" value="@images.KindergartenId" />
-                                        <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
-                                </div>
-                            }
+                    <div class="d-flex flex-wrap">
+                        @foreach (var img in Model.Image)
+                        {
+                            <div class="position-relative me-4 mb-4">
+
+                              <partial name="_Images" model="img" />
+
+                               <form asp-action="RemoveImage" asp-controller="Kindergartens" method="post"
+                                      class="position-absolute"
+                                      style="top:-10px; left: -10px;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="ImageId" value="@img.ImageId" />
+                                    <input type="hidden" name="KindergartenId" value="@img.KindergartenId" />
+                                    <button type="submit"
+                                            class="btn btn-sm"
+                                            style="background:#6f42c1;color:#fff;border-radius:8px;box-shadow:0 4px 12px rgba(111,66,193,.35);">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
                         }
                     </div>
-
-                    @if (Model.Id.HasValue)
-                    {
-                        <button asp-action="Update" asp-controller="Kindergartens" type="submit" class="btn btn-success m-2">Update</button>
-                    }
-                    else
-                    {
-                        <button asp-action="Create" asp-controller="Kindergartens" type="submit" class="btn btn-success m-2">Create</button>
-                    }
-
-                    <a asp-action="Index" asp-controller="Kindergartens" class="btn btn-secondary m-2">Back</a>
-                </form>
+                }
             </div>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
