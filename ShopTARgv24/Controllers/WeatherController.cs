@@ -20,5 +20,9 @@ namespace ShopTARgv24.Controllers
             return View();
         }
         [HttpPost]
+        public IActionResult SearchCity()
+            {
+            return View();
+        }
     }
 }
