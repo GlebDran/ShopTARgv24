@@ -7,6 +7,7 @@ namespace ShopTARgv24.Controllers
 {
     public class WeatherController : Controller
     {
+        private readonly IWeatherForecastServices _weatherForecastServices;
         public WeatherController
             (
             IWeatherForecastServices weatherForecastServices
