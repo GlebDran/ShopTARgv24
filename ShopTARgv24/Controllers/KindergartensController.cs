@@ -128,6 +128,7 @@ namespace ShopTARgv24.Controllers
         }
 
         // DELETE (GET)
+        // DELETE (GET)
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
@@ -142,7 +143,8 @@ namespace ShopTARgv24.Controllers
                 KindergartenName = kindergarten.KindergartenName,
                 TeacherName = kindergarten.TeacherName,
                 CreatedAt = kindergarten.CreatedAt,
-                UpdatedAt = kindergarten.UpdatedAt
+                UpdatedAt = kindergarten.UpdatedAt,
+                Image = await FilesFromDatabase(id)
             };
 
             return View(vm);
