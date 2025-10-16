@@ -2,33 +2,28 @@
 {
     public class AccuLocationRootDto
     {
-        public string? LocalObservationDateTime { get; set; }
-        public int? EpochTime { get; set; }
-        public string? WeatherText { get; set; }
-        public int? WeatherIcon { get; set; }
-        public bool? HasPrecipitation { get; set; }
-        public string? PrecipitationType { get; set; }
-        public bool? IsDayTime { get; set; }
-        public Temperature Temperature { get; set; }
-        public string? MobileLink { get; set; }
-        public string? Link { get; set; }
+        public string LocalObservationDateTime { get; set; } = string.Empty;
+        public int EpochTime { get; set; }
+        public string WeatherText { get; set; } = string.Empty;
+        public int WeatherIcon { get; set; }
+        public bool HasPrecipitation { get; set; }
+        public string PrecipitationType { get; set; } = string.Empty;
+        public bool IsDayTime { get; set; }
+        public TemperatureDto? Temperature { get; set; }
+        public string MobileLink { get; set; } = string.Empty;
+        public string Link { get; set; } = string.Empty;
     }
 
-    public class Temperature
+    public class TemperatureDto
     {
-        public Metric Metric { get; set; }
-        public Imperial Imperial { get; set; }
+        public WeatherValueDto? Metric { get; set; }
+        public WeatherValueDto? Imperial { get; set; }
     }
-    public class Metric
+
+    public class WeatherValueDto
     {
-        public int? Value { get; set; }
-        public string? Unit { get; set; }
-        public int? UnitType { get; set; }
-    }
-    public class Imperial
-    {
-        public int? Value { get; set; }
-        public string? Unit { get; set; }
-        public int? UnitType { get; set; }
+        public double Value { get; set; }
+        public string Unit { get; set; } = string.Empty;
+        public int UnitType { get; set; }
     }
 }
