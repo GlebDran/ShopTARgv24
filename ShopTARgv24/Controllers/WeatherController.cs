@@ -43,7 +43,13 @@ namespace ShopTARgv24.Controllers
 
             _weatherForecastServices.AccuWeatherResult(dto);
 
-            return View();
+            AccuWeatherViewModel vm = new();
+
+            vm.TempMetricValueUnit = dto.TempMetricValueUnit;
+            vm.Text = dto.Text;
+            vm.LocalObservationDateTime = dto.LocalObservationDateTime;
+
+            return View(vm);
         }
     }
 }

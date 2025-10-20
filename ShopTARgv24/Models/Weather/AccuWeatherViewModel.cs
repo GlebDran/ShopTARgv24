@@ -1,9 +1,7 @@
-﻿namespace ShopTARgv24.Core.Dto
+﻿namespace ShopTARgv24.Models.Weather
 {
-    public class AccuLocationWeatherResultDto
+    public class AccuWeatherViewModel
     {
-        public string CityName { get; set; } = string.Empty;
-
         public string Text { get; set; } = string.Empty;
 
         public double TempMetricValueUnit { get; set; }
