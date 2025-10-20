@@ -47,7 +47,7 @@ namespace ShopTARgv24.Controllers
 
             vm.TempMetricValueUnit = dto.TempMetricValueUnit;
             vm.Text = dto.Text;
-            vm.LocalObservationDateTime = dto.LocalObservationDateTime;
+            vm.EndDate = dto.EndDate;
 
             return View(vm);
         }

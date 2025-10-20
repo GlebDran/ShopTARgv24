@@ -27,9 +27,9 @@ namespace ShopTARgv24.ApplicationServices.Services
                     var weatherData = JsonSerializer.Deserialize<AccuLocationRootDto>(jsonResponse);
                     //return weatherData;
 
-                    dto.LocalObservationDateTime = weatherData.LocalObservationDateTime;
-                    dto.Text = weatherData.WeatherText;
-                    dto.TempMetricValueUnit = weatherData.Temperature.Metric.Value;
+                    dto.EndDate = weatherData.Headline.EndDate;
+                    dto.Text = weatherData.Headline.Text;
+                    dto.TempMetricValueUnit = weatherData.DailyForecasts[0].Temperature.Maximum.Value;
                 }
                 else
                 {

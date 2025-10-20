@@ -3,7 +3,7 @@
     public class AccuWeatherViewModel
     {
 
-        public string LocalObservationDateTime { get; set; } = string.Empty;
+        public DateTime EndDate { get; set; }
         public string Text { get; set; } = string.Empty;
         public double TempMetricValueUnit { get; set; }
     }
