@@ -1,4 +1,6 @@
-﻿using ShopTARgv24.Core.Dto;
+﻿using System.Threading.Tasks;
+using ShopTARgv24.Core.Dto;
+
 
 namespace ShopTARgv24.Core.ServiceInterface
 {

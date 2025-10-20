@@ -10,7 +10,7 @@ namespace ShopTARgv24.ApplicationServices.Services
 
         public async Task<AccuLocationWeatherResultDto> AccuWeatherResult(AccuLocationWeatherResultDto dto)
         {
-            //https://developer.accuweather.com/core-weather/text-search?lang=shell#city-search
+
 
             string accuApiKey = "zpka_88a1ba89125145e49e20f7754ffd15ed_e6fa6a91";
             string baseUrl = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
@@ -36,7 +36,6 @@ namespace ShopTARgv24.ApplicationServices.Services
                     // Handle error response
                     throw new Exception("Error fetching weather data from AccuWeather API");
                 }
-
                 return dto;
             }
         }
