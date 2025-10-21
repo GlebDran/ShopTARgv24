@@ -15,7 +15,7 @@ namespace ShopTARgv24.ApplicationServices.Services
         {
             //https://developer.accuweather.com/core-weather/text-search?lang=shell#city-search
 
-            string accuApiKey = "zpka_0c86f3fafa9147e58813fa06b647f221_9b9fd9d9";
+            string accuApiKey = "";
             string baseUrl = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
 
             using (var httpClient = new HttpClient())
