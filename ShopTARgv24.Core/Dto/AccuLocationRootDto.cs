@@ -13,7 +13,7 @@
         public int Severity { get; set; }
         public string Text { get; set; }
         public string Category { get; set; }
-        public DateTime EndDate { get; set; }
+        public string EndDate { get; set; }
         public int EndEpochDate { get; set; }
         public string MobileLink { get; set; }
         public string Link { get; set; }
@@ -39,14 +39,14 @@
 
     public class Minimum
     {
-        public float Value { get; set; }
+        public double Value { get; set; }
         public string Unit { get; set; }
         public int UnitType { get; set; }
     }
 
     public class Maximum
     {
-        public float Value { get; set; }
+        public double Value { get; set; }
         public string Unit { get; set; }
         public int UnitType { get; set; }
     }
