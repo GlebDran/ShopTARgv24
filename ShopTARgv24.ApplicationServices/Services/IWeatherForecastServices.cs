@@ -1,10 +1,10 @@
-﻿using System;
-using ShopTARgv24.Core.Dto;
+﻿using ShopTARgv24.Core.Dto;
 
-namespace ShopTARgv24.ApplicationServices.Services
+namespace ShopTARgv24.Core.ServiceInterface
 {
-    internal interface IWeatherForecastServices
+    public interface IWeatherForecastServices
     {
         Task<AccuLocationWeatherResultDto> AccuWeatherResult(AccuLocationWeatherResultDto dto);
+        Task<AccuLocationWeatherResultDto> AccuWeatherResultWebClient(AccuLocationWeatherResultDto dto);
     }
 }
