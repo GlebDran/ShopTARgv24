@@ -17,10 +17,10 @@ namespace ShopTARgv24.ApplicationServices.Services
 
         public async Task<ChuckNorrisJokeDto> GetRandomJoke()
         {
-            // Используем эндпоинт для получения случайной шутки
+            
             var request = new HttpRequestMessage(HttpMethod.Get, "https://api.chucknorris.io/jokes/random");
 
-            // Некоторые API требуют User-Agent
+            
             request.Headers.Add("User-Agent", "ShopTARgv24-App");
 
             var response = await _httpClient.SendAsync(request);
@@ -29,7 +29,7 @@ namespace ShopTARgv24.ApplicationServices.Services
             {
                 var jsonString = await response.Content.ReadAsStringAsync();
 
-                // Десериализуем JSON в наш DTO
+                
                 var jokeDto = JsonSerializer.Deserialize<ChuckNorrisJokeDto>(jsonString, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
@@ -37,7 +37,7 @@ namespace ShopTARgv24.ApplicationServices.Services
                 return jokeDto;
             }
 
-            // Если запрос не удался, возвращаем null
+            
             return null;
         }
     }
