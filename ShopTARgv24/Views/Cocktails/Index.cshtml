@@ -1,0 +1,40 @@
+﻿﻿@model List<ShopTARgv24.Core.ServiceInterface.CocktailDto>
+@{
+    ViewData["Title"] = "Cocktails";
+    var q = (string)(ViewBag.Query ?? "");
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Cocktails</h2>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-6">
+            <input name="q" value="@q" class="form-control" placeholder="Type cocktail name e.g. margarita" />
+        </div>
+        <div class="col-md-auto">
+            <button class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    @if (!string.IsNullOrWhiteSpace(q) && (Model == null || Model.Count == 0))
+    {
+        <div class="alert alert-warning">Nothing found for “@q”.</div>
+    }
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var c in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="@c.Thumb" class="card-img-top" alt="@c.Name" style="object-fit:cover;height:200px;">
+                    <div class="card-body">
+                        <h5 class="card-title">@c.Name</h5>
+                        <p class="mb-1"><strong>@c.Category</strong> — @c.Alcoholic</p>
+                        <p class="text-muted mb-2">Glass: @c.Glass</p>
+                        <a asp-action="Details" asp-route-id="@c.Id" class="btn btn-outline-primary btn-sm">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

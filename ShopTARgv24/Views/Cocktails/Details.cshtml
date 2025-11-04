@@ -1,0 +1,29 @@
+﻿﻿@model ShopTARgv24.Core.ServiceInterface.CocktailDto
+@{
+    ViewData["Title"] = Model.Name;
+}
+<div class="container mt-4">
+    <a asp-action="Index" class="btn btn-back mb-3">Back</a>
+
+    <div class="row g-4">
+        <div class="col-md-5">
+            <img src="@Model.Thumb" alt="@Model.Name" class="img-fluid rounded shadow-sm" />
+        </div>
+        <div class="col-md-7">
+            <h2>@Model.Name</h2>
+            <p class="mb-1"><strong>@Model.Category</strong> — @Model.Alcoholic</p>
+            <p class="text-muted">Glass: @Model.Glass</p>
+
+            <h5>Ingredients</h5>
+            <ul>
+                @foreach (var i in Model.Ingredients)
+                {
+                    <li>@i</li>
+                }
+            </ul>
+
+            <h5>Instructions</h5>
+            <p>@Model.Instructions</p>
+        </div>
+    </div>
+</div>
