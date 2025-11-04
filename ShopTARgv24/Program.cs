@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Core.ServiceInterface;
+using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Data;
-
 namespace ShopTARgv24
 {
     public class Program
@@ -12,22 +10,25 @@ namespace ShopTARgv24
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
-
-            builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
-            builder.Services.AddScoped<IFileServices, FileServices>();
-            builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
-            builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
-
-
-
+            //builder.Services.AddScoped< SpaceshipServices>();
 
             builder.Services.AddDbContext<ShopTARgv24Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddScoped<IChuckNorrisServices, ShopTARgv24.ApplicationServices.Services.ChuckNorrisServices>();
-            builder.Services.AddHttpClient<IChuckNorrisServices, ShopTARgv24.ApplicationServices.Services.ChuckNorrisServices>();
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
+            builder.Services.AddScoped<IFileServices, FileServices>();
+            builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
+            builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
+            // WebClient for ChuckNorrisServices
+            builder.Services.AddScoped<IChuckNorrisServices, ChuckNorrisServices>();
+            //HttpClient for ChuckNorrisServices
+            builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
+            // HttpClient for CocktailServices
+            builder.Services.AddHttpClient<ICocktailService, CocktailService>();
+            // WebClient for OpenWeatherServices
+            builder.Services.AddScoped<IOpenWeatherServices, OpenWeatherServices>();
 
             var app = builder.Build();
 
@@ -39,13 +40,12 @@ namespace ShopTARgv24
                 app.UseHsts();
             }
 
+            app.UseStaticFiles();
+
             app.UseHttpsRedirection();
             app.UseRouting();
 
             app.UseAuthorization();
-            app.UseStaticFiles();
-
-
 
             app.MapStaticAssets();
             app.MapControllerRoute(
