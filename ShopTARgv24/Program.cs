@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
 using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
@@ -12,7 +11,6 @@ namespace ShopTARgv24
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
@@ -20,32 +18,28 @@ namespace ShopTARgv24
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
 
-
-
-
             builder.Services.AddDbContext<ShopTARgv24Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddScoped<IChuckNorrisServices, ShopTARgv24.ApplicationServices.Services.ChuckNorrisServices>();
-            builder.Services.AddHttpClient<IChuckNorrisServices, ShopTARgv24.ApplicationServices.Services.ChuckNorrisServices>();
+            builder.Services.AddHttpClient<ICocktailService, CocktailService>(client =>
+            {
+                client.BaseAddress = new Uri("https://www.thecocktaildb.com/api/json/v1/1/");
+            });
+
+            builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
-            app.UseRouting();
-
-            app.UseAuthorization();
             app.UseStaticFiles();
-
-
+            app.UseRouting();
+            app.UseAuthorization();
 
             app.MapStaticAssets();
             app.MapControllerRoute(
