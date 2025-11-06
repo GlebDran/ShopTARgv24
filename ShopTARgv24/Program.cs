@@ -26,7 +26,7 @@ namespace ShopTARgv24
             //HttpClient for ChuckNorrisServices
             builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
             // HttpClient for CocktailServices
-            builder.Services.AddHttpClient<ICocktailService, CocktailService>();
+            //builder.Services.AddHttpClient<ICocktailService, CocktailService>();
             // WebClient for OpenWeatherServices
             builder.Services.AddScoped<IOpenWeatherServices, OpenWeatherServices>();
 
