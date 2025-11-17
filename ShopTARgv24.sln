@@ -19,7 +19,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv24.RealEstateTest"
 		{D39801DD-622D-47C1-9395-DA8556BD949A} = {D39801DD-622D-47C1-9395-DA8556BD949A}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv24.Spaceships", "ShopTARgv24.Spaceships\ShopTARgv24.Spaceships.csproj", "{42A95341-56B2-40CA-9F60-9AED1BBF60B1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv24.SpaceShips", "ShopTARgv24.Spaceships\ShopTARgv24.SpaceShips.csproj", "{42A95341-56B2-40CA-9F60-9AED1BBF60B1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
