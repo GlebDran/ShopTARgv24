@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using ShopTARgv24.Core.Dto;
 using ShopTARgv24.Core.ServiceInterface;
-using ShopTARgv24.RealEstateTest;
+using ShopTARgv24.SpaceShipsTest;
 
 namespace ShopTARgv24.SpaceShipsTest
 {
