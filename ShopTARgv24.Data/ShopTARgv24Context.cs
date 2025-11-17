@@ -15,5 +15,15 @@ namespace ShopTARgv24.Data
         public DbSet<RealEstate> RealEstate { get; set; }
         public DbSet<FileToDatabase> FileToDatabases { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<FileToDatabase>()
+                .HasOne(f => f.RealEstate)
+                .WithMany(r => r.Files)
+                .HasForeignKey(f => f.RealEstateId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }
