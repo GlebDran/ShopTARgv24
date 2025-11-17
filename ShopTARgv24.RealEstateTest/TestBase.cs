@@ -10,6 +10,7 @@ using ShopTARgv24.Data;
 using ShopTARgv24.RealEstateTest.Macros;
 using ShopTARgv24.RealEstateTest.Mock;
 using ZendeskApi_v2.Requests;
+using IMacros = ShopTARgv24.RealEstateTest.Macros.IMacros;
 
 namespace ShopTARgv24.RealEstateTest
 {

@@ -68,7 +68,7 @@ namespace ShopTARgv24.ApplicationServices.Services
                 }).ToArrayAsync();
 
             await _fileServices.RemoveImagesFromApi(images);
-            _context.Spaceships.Remove(spaceship);
+            _ = _context.Spaceships.Remove(spaceship);
             await _context.SaveChangesAsync();
 
             return spaceship;
@@ -76,16 +76,9 @@ namespace ShopTARgv24.ApplicationServices.Services
 
         public async Task<Spaceship> Update(SpaceshipDto dto)
         {
-            // 1. Находим существующий корабль по ID
-            var domain = await _context.Spaceships
-                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+            Spaceship domain = new();
 
-            if (domain == null)
-            {
-                return null; // Если не нашли, возвращаем null
-            }
-
-            // 2. Обновляем ЕГО свойства
+            domain.Id = dto.Id;
             domain.Name = dto.Name;
             domain.TypeName = dto.TypeName;
             domain.BuiltDate = dto.BuiltDate;
@@ -93,13 +86,10 @@ namespace ShopTARgv24.ApplicationServices.Services
             domain.EnginePower = dto.EnginePower;
             domain.Passengers = dto.Passengers;
             domain.InnerVolume = dto.InnerVolume;
-            domain.CreatedAt = dto.CreatedAt; // CreatedAt не должен меняться при Update, но оставим как у тебя
+            domain.CreatedAt = dto.CreatedAt;
             domain.ModifiedAt = DateTime.Now;
-
-            // 3. Вызываем сервис файлов (если есть новые)
             _fileServices.FilesToApi(dto, domain);
 
-            // 4. Говорим контексту обновить (хотя FindAsync уже отслеживает)
             _context.Spaceships.Update(domain);
             await _context.SaveChangesAsync();
 

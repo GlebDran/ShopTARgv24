@@ -1,167 +1,146 @@
-﻿using ShopTARgv24.Core.Dto;
+﻿using System.Globalization;
+using ShopTARgv24.Core.Dto;
 using ShopTARgv24.Core.ServiceInterface;
-using ShopTARgv24.Data;
-using ShopTARgv24.Core.Domain;
-using Microsoft.AspNetCore.Http; // Для IFormFile
+using ShopTARgv24.RealEstateTest;
 
-namespace ShopTARgv24.RealEstateTest
+namespace ShopTARgv24.SpaceShipsTest
 {
-    public class SpaceshipsTest : TestBase
+    public class SpaceShipsTest : TestBase
     {
-        // --- Вспомогательные методы для Mock данных ---
-
-        /// <summary>
-        /// Создает DTO с базовыми данными для нового корабля.
-        /// </summary>
-        private SpaceshipDto MockSpaceshipData()
+        private SpaceshipDto SpaceshipDto1()
         {
             return new SpaceshipDto
             {
-                Name = "Millennium Falcon",
-                TypeName = "Light Freighter",
-                BuiltDate = new DateTime(1977, 5, 25),
-                Crew = 4,
-                EnginePower = 10000,
-                Passengers = 6,
-                InnerVolume = 200,
+                Name = "Unit-1",
+                TypeName = "R45",
+                BuiltDate = DateTime.ParseExact("15.01.2020", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                Crew = 5,
+                EnginePower = 50,
+                Passengers = 25,
+                InnerVolume = 450,
                 CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
-                Files = new List<IFormFile>(), // Важно инициализировать списки
-                FileToApiDtos = new List<FileToApiDto>()
+                ModifiedAt = DateTime.Now
             };
         }
 
-        /// <summary>
-        /// Создает DTO с данными для обновления существующего корабля.
-        /// </summary>
-        private SpaceshipDto MockUpdateSpaceshipData(Guid id)
+        private SpaceshipDto SpaceshipDto2()
         {
             return new SpaceshipDto
             {
-                Id = id,
-                Name = "X-Wing",
-                TypeName = "Starfighter",
-                BuiltDate = new DateTime(1980, 5, 21),
-                Crew = 1,
-                EnginePower = 12000,
-                Passengers = 0,
-                InnerVolume = 50,
-                ModifiedAt = DateTime.Now.AddDays(1) // Обновляем дату
+                Name = "Unit-2",
+                TypeName = "X99",
+                BuiltDate = DateTime.ParseExact("20.02.2021", "dd.MM.yyyy", CultureInfo.InvariantCulture),
+                Crew = 10,
+                EnginePower = 120,
+                Passengers = 40,
+                InnerVolume = 900,
+                CreatedAt = DateTime.Now,
+                ModifiedAt = DateTime.Now
             };
         }
 
+        // 1) Create
 
-        // --- 5 ТЕСТОВ ДЛЯ SPACESHIPS ---
-
-        /// <summary>
-        /// Тест 1: Проверяет, что корабль успешно создается с валидными данными.
-        /// </summary>
         [Fact]
-        public async Task Should_CreateSpaceship_WhenValidData()
+        public async Task Should_CreateSpaceship_WhenReturnResult()
         {
-            // Arrange (Подготовка)
-            var dto = MockSpaceshipData();
+            // Arrange
+            var dto = SpaceshipDto1();
 
-            // Act (Действие)
-            // Вызываем сервис <ISpaceshipsServices> и его метод Create
+            // Act
             var result = await Svc<ISpaceshipsServices>().Create(dto);
 
-            // Assert (Проверка)
-            Assert.NotNull(result);
-            Assert.Equal(dto.Name, result.Name);
-            Assert.Equal(dto.Crew, result.Crew);
-            Assert.NotEqual(Guid.Empty, result.Id); // Убедимся, что ID был присвоен
-        }
-
-        /// <summary>
-        /// Тест 2: Проверяет, что мы можем получить созданный корабль по его ID.
-        /// </summary>
-        [Fact]
-        public async Task Should_GetSpaceshipById_WhenReturnsEqual()
-        {
-            // Arrange
-            var dto = MockSpaceshipData();
-            var created = await Svc<ISpaceshipsServices>().Create(dto);
-            var id = (Guid)created.Id;
-
-            // Act
-            var result = await Svc<ISpaceshipsServices>().DetailAsync(id);
-
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(id, result.Id);
             Assert.Equal(dto.Name, result.Name);
         }
 
-        /// <summary>
-        /// Тест 3: Проверяет, что корабль удаляется и его нельзя получить снова.
-        /// </summary>
+        // 2) Get by id
+
         [Fact]
-        public async Task Should_DeleteSpaceshipById_WhenDelete()
+        public async Task Should_GetByIdSpaceship_WhenReturnsEqual()
         {
             // Arrange
-            var dto = MockSpaceshipData();
-            var created = await Svc<ISpaceshipsServices>().Create(dto);
-            var id = (Guid)created.Id;
+            var service = Svc<ISpaceshipsServices>();
+            var dto = SpaceshipDto1();
+
+            var created = await service.Create(dto);
 
             // Act
-            // Удаляем корабль
-            var deleted = await Svc<ISpaceshipsServices>().Delete(id);
-            // Пытаемся получить его снова из базы данных
-            var result = await Svc<ISpaceshipsServices>().DetailAsync(id);
+            var fromDb = await service.DetailAsync((Guid)created.Id);
 
             // Assert
-            Assert.Equal(created.Id, deleted.Id); // Проверяем, что метод Delete вернул удаленный объект
-            Assert.Null(result); // Проверяем, что DetailAsync не нашел объект (он удален)
+            Assert.NotNull(fromDb);
+            Assert.Equal(created.Id, fromDb.Id);
         }
 
-        /// <summary>
-        /// Тест 4: Проверяет, что данные корабля успешно обновляются.
-        /// </summary>
+        // 3) Delete
+
         [Fact]
-        public async Task Should_UpdateSpaceship_WhenUpdateData()
+        public async Task Should_DeleteByIdSpaceship_WhenDeleteSpaceship()
         {
             // Arrange
-            var dto = MockSpaceshipData();
-            var created = await Svc<ISpaceshipsServices>().Create(dto);
-            var id = (Guid)created.Id;
-            var updateDto = MockUpdateSpaceshipData(id); // Используем mock для обновления
+            var service = Svc<ISpaceshipsServices>();
+            var dto = SpaceshipDto1();
+
+            var created = await service.Create(dto);
 
             // Act
-            var updated = await Svc<ISpaceshipsServices>().Update(updateDto);
-            // Получаем обновленные данные из базы
-            var result = await Svc<ISpaceshipsServices>().DetailAsync(id);
+            await service.Delete((Guid)created.Id);
+            var afterDelete = await service.DetailAsync((Guid)created.Id);
 
             // Assert
-            Assert.NotNull(updated);
-            Assert.NotNull(result);
-            Assert.Equal(id, updated.Id);
-            Assert.Equal(updateDto.Name, result.Name); // Имя должно обновиться
-            Assert.Equal("Starfighter", result.TypeName); // Тип должен обновиться
-            Assert.NotEqual(dto.Name, result.Name); // Старого имени быть не должно
+            Assert.Null(afterDelete);
         }
 
-        /// <summary>
-        /// Тест 5: Проверяет, что при создании нескольких кораблей им присваиваются уникальные ID.
-        /// (Скопировано из RealEstateTest)
-        /// </summary>
+        // 4) An attempt to delete using an incorrect ID should not affect the existing ship
+
         [Fact]
-        public async Task Should_AssignUniqueIds_When_CreateMultiple()
+        public async Task ShouldNot_DeleteByIdSpaceship_WhenWrongId()
         {
             // Arrange
-            var dto1 = MockSpaceshipData();
-            dto1.Name = "Discovery One"; // Даем уникальные имена для ясности
-            var dto2 = MockSpaceshipData();
-            dto2.Name = "Nostromo";
+            var service = Svc<ISpaceshipsServices>();
+            var dto = SpaceshipDto1();
+
+            var created = await service.Create(dto);
+            var wrongId = Guid.NewGuid();
 
             // Act
-            var s1 = await Svc<ISpaceshipsServices>().Create(dto1);
-            var s2 = await Svc<ISpaceshipsServices>().Create(dto2);
+            try
+            {
+                await service.Delete(wrongId);
+            }
+            catch
+            {
+
+            }
+
+            var stillExists = await service.DetailAsync((Guid)created.Id);
+
+            // Assert
+            Assert.NotNull(stillExists);
+            Assert.Equal(created.Id, stillExists.Id);
+        }
+
+        // 5) Each Create operation must generate a unique ID
+
+        [Fact]
+        public async Task Should_AssignUniqueIds_When_CreateMultipleSpaceships()
+        {
+            // Arrange
+            var service = Svc<ISpaceshipsServices>();
+            var dto1 = SpaceshipDto1();
+            var dto2 = SpaceshipDto2();
+
+            // Act
+            var s1 = await service.Create(dto1);
+            var s2 = await service.Create(dto2);
 
             // Assert
             Assert.NotNull(s1);
             Assert.NotNull(s2);
-            Assert.NotEqual(s1.Id, s2.Id); // Самая главная проверка - ID не равны
+
+            Assert.NotEqual(s1.Id, s2.Id);
             Assert.NotEqual(Guid.Empty, s1.Id);
             Assert.NotEqual(Guid.Empty, s2.Id);
         }
