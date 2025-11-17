@@ -1,4 +1,6 @@
-﻿namespace ShopTARgv24.Core.Domain
+﻿using ShopTARgv24.Core.Domain; // Убедись, что этот using есть
+
+namespace ShopTARgv24.Core.Domain
 {
     public class Spaceship
     {
@@ -13,5 +15,8 @@
 
         public DateTime? CreatedAt { get; set; }
         public DateTime? ModifiedAt { get; set; }
+
+        // ДОБАВЬ ЭТУ СТРОКУ
+        public ICollection<FileToApi> Files { get; set; } = new List<FileToApi>();
     }
 }
