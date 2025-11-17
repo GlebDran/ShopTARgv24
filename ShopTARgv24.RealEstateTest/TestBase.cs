@@ -1,16 +1,14 @@
-using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using ShopTARgv24.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using ShopTARgv24.ApplicationServices.Services;
-using ShopTARgv24.Core.Domain;
-using ShopTARgv24.Core.ServiceInterface;
-using ShopTARgv24.Data;
-using ShopTARgv24.RealEstateTest.Macros;
-using ShopTARgv24.RealEstateTest.Mock;
 using ZendeskApi_v2.Requests;
-using IMacros = ShopTARgv24.RealEstateTest.Macros.IMacros;
+using ShopTARgv24.Core.ServiceInterface;
+using ShopTARgv24.ApplicationServices.Services;
+using Microsoft.Extensions.Hosting;
+using ShopTARgv24.RealEstateTest.Mock;
+using System.Linq;
+using ShopTARgv24.Core.Domain;
 
 namespace ShopTARgv24.RealEstateTest
 {
