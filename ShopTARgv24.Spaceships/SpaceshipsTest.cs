@@ -105,14 +105,9 @@ namespace ShopTARgv24.SpaceShipsTest
             var wrongId = Guid.NewGuid();
 
             // Act
-            try
-            {
-                await service.Delete(wrongId);
-            }
-            catch
-            {
-
-            }
+            
+           await service.Delete(wrongId);
+   
 
             var stillExists = await service.DetailAsync((Guid)created.Id);
 
