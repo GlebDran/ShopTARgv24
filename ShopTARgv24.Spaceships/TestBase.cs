@@ -5,6 +5,8 @@ using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
 using ShopTARgv24.RealEstateTest.Mock;
+using ShopTARgv24.SpaceShipsTest.Mock;
+using MockHostEnvironment = ShopTARgv24.RealEstateTest.Mock.MockHostEnvironment;
 
 namespace ShopTARgv24.SpaceShipsTest
 {
