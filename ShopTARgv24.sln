@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv24.Core", "ShopTAR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv24.Data", "ShopTARgv24.Data\ShopTARgv24.Data.csproj", "{AEF75069-8D87-4E7B-B64A-BE58F0ED9F92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopTARgv24.Kindergarten", "ShopTARgv24.Kindergarten\ShopTARgv24.Kindergarten.csproj", "{C498DE68-499C-4870-A63F-5F77620056B5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{AEF75069-8D87-4E7B-B64A-BE58F0ED9F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEF75069-8D87-4E7B-B64A-BE58F0ED9F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEF75069-8D87-4E7B-B64A-BE58F0ED9F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C498DE68-499C-4870-A63F-5F77620056B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C498DE68-499C-4870-A63F-5F77620056B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C498DE68-499C-4870-A63F-5F77620056B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C498DE68-499C-4870-A63F-5F77620056B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
