@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Core.Dto;
 using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
 using ShopTARgv24.Models.RealEstate;
 using ShopTARgv24.Models.Spaceships;
+
 
 namespace ShopTARgv24.Controllers
 {
@@ -13,15 +13,18 @@ namespace ShopTARgv24.Controllers
     {
         private readonly ShopTARgv24Context _context;
         private readonly IRealEstateServices _realEstateServices;
+        private readonly IFileServices _fileServices;
 
         public RealEstateController
             (
                 ShopTARgv24Context context,
-                IRealEstateServices realEstateServices
+                IRealEstateServices realEstateServices,
+                IFileServices fileServices
             )
         {
             _context = context;
             _realEstateServices = realEstateServices;
+            _fileServices = fileServices;
         }
 
         public IActionResult Index()
@@ -49,6 +52,11 @@ namespace ShopTARgv24.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(RealEstateCreateUpdateViewModel vm)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("CreateUpdate", vm);
+            }
+
             var dto = new RealEstateDto()
             {
                 Id = vm.Id,
@@ -62,7 +70,7 @@ namespace ShopTARgv24.Controllers
                 Image = vm.Image
                     .Select(x => new FileToDatabaseDto
                     {
-                        Id = x.Id,
+                        Id = x.ImageId,
                         ImageData = x.ImageData,
                         ImageTitle = x.ImageTitle,
                         RealEstateId = x.RealEstateId,
@@ -86,9 +94,10 @@ namespace ShopTARgv24.Controllers
 
             if (realEstate == null)
             {
-                return NotFound();
+                return View("NotFound", id);
             }
 
+            RealEstateImageViewModel[] photos = await FilesFromDatabase(id);
 
             var vm = new RealEstateCreateUpdateViewModel();
 
@@ -99,6 +108,7 @@ namespace ShopTARgv24.Controllers
             vm.Location = realEstate.Location;
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.Image.AddRange(photos);
 
             return View("CreateUpdate", vm);
         }
@@ -106,6 +116,11 @@ namespace ShopTARgv24.Controllers
         [HttpPost]
         public async Task<IActionResult> Update(RealEstateCreateUpdateViewModel vm)
         {
+            if (!ModelState.IsValid)
+            {
+                return View("CreateUpdate", vm);
+            }
+
             var dto = new RealEstateDto()
             {
                 Id = vm.Id,
@@ -134,8 +149,10 @@ namespace ShopTARgv24.Controllers
 
             if (realEstate == null)
             {
-                return NotFound();
+                return View("NotFound", id);
             }
+
+            RealEstateImageViewModel[] photos = await FilesFromDatabase(id);
 
             var vm = new RealEstateDeleteViewModel();
 
@@ -146,6 +163,7 @@ namespace ShopTARgv24.Controllers
             vm.Location = realEstate.Location;
             vm.CreatedAt = realEstate.CreatedAt;
             vm.ModifiedAt = realEstate.ModifiedAt;
+            vm.Image.AddRange(photos);
 
             return View(vm);
         }
@@ -171,19 +189,10 @@ namespace ShopTARgv24.Controllers
 
             if (realEstate == null)
             {
-                return NotFound();
+                return View("NotFound", id);
             }
 
-            var photos = await _context.FileToDatabases
-                .Where(x => x.RealEstateId == id)
-                .Select(y => new RealEstateImageViewModel
-                {
-                    RealEstateId = y.Id,
-                    Id = y.Id,
-                    ImageData = y.ImageData,
-                    ImageTitle = y.ImageTitle,
-                    Image = string.Format("data:image/gif;base64, {0}", Convert.ToBase64String(y.ImageData))
-                }).ToArrayAsync();
+            RealEstateImageViewModel[] photos = await FilesFromDatabase(id);
 
             var vm = new RealEstateDetailsViewModel();
 
@@ -197,6 +206,40 @@ namespace ShopTARgv24.Controllers
             vm.Image.AddRange(photos);
 
             return View(vm);
+        }
+
+        private async Task<RealEstateImageViewModel[]> FilesFromDatabase(Guid id)
+        {
+            return await _context.FileToDatabases
+                .Where(x => x.RealEstateId == id)
+                .Select(y => new RealEstateImageViewModel
+                {
+                    RealEstateId = y.Id,
+                    ImageId = y.Id,
+                    ImageData = y.ImageData,
+                    ImageTitle = y.ImageTitle,
+                    Image = string.Format("data:image/gif;base64, {0}", Convert.ToBase64String(y.ImageData))
+                }).ToArrayAsync();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(RealEstateImageViewModel vm)
+        {
+            var dto = new FileToDatabaseDto()
+            {
+                Id = vm.ImageId
+            };
+
+            var image = await _fileServices.RemoveImageFromDatabase(dto);
+
+            var realEstateId = image.RealEstateId;
+
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Update), new { id = realEstateId });
         }
     }
 }
