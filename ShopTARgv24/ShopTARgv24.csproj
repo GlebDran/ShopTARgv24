@@ -1,38 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="wwwroot\multipleFileUpload\**" />
-    <Content Remove="wwwroot\multipleFileUpload\**" />
-    <EmbeddedResource Remove="wwwroot\multipleFileUpload\**" />
-    <None Remove="wwwroot\multipleFileUpload\**" />
-  </ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.11" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Remove="Views\Spaceships\Createcs.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="Views\Spaceships\Createcshtml.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.8">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.8" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ShopTARgv24.ApplicationServices\ShopTARgv24.ApplicationServices.csproj" />
-    <ProjectReference Include="..\ShopTARgv24.Data\ShopTARgv24.Data.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ShopTARgv24.ApplicationServices\ShopTARgv24.ApplicationServices.csproj" />
+		<ProjectReference Include="..\ShopTARgv24.Core\ShopTARgv24.Core.csproj" />
+		<ProjectReference Include="..\ShopTARgv24.Data\ShopTARgv24.Data.csproj" />
+	</ItemGroup>
 
 </Project>

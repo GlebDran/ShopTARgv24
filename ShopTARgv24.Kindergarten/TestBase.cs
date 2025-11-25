@@ -1,12 +1,14 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ShopTARgv24.Data;
+﻿using System;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using ZendeskApi_v2.Requests;
-using ShopTARgv24.Core.ServiceInterface;
-using ShopTARgv24.ApplicationServices.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ShopTARgv24.ApplicationServices.Services;
+using ShopTARgv24.Core.ServiceInterface;
+using ShopTARgv24.Data;
 using ShopTARgv24.KindergartenTest.Mock;
+using ZendeskApi_v2.Requests;
 
 namespace ShopTARgv24.KindergartenTest
 {

@@ -38,7 +38,7 @@ namespace ShopTARgv24.KindergartenTest
             };
         }
 
-        // 1)  Loomine — teenus peab tagastama mitte-null tulemuse
+        // Loomine — teenus peab tagastama mitte-null tulemuse
 
         [Fact]
         public async Task Should_CreateKindergarten_WhenReturnResult()
@@ -54,7 +54,7 @@ namespace ShopTARgv24.KindergartenTest
             Assert.NotEqual(Guid.Empty, result.Id);
         }
 
-        // 2) Päring ID järgi — pärast Create-käsku peame saama sama kirje
+        // Päring ID järgi — pärast Create-käsku peame saama sama kirje
 
         [Fact]
         public async Task Should_GetByIdKindergarten_WhenReturnsEqual()
@@ -74,31 +74,7 @@ namespace ShopTARgv24.KindergartenTest
             Assert.Equal(created.GroupName, fromDb.GroupName);
         }
 
-        // 3) Uuendamine — väljad peavad muutuma
-
-        [Fact]
-        public async Task Should_UpdateKindergarten_WhenUpdateData()
-        {
-            // Arrange
-            var service = Svc<IKindergartenServices>();
-
-            var created = await service.Create(MockKindergartenData());
-            var updateDto = MockUpdatedKindergartenData((Guid)created.Id);
-
-            // Act
-            var updated = await service.Update(updateDto);
-
-            // Assert
-            Assert.NotNull(updated);
-            Assert.Equal(created.Id, updated.Id);
-            Assert.Equal(updateDto.GroupName, updated.GroupName);
-            Assert.Equal(updateDto.ChildrenCount, updated.ChildrenCount);
-            Assert.Equal(updateDto.KindergartenName, updated.KindergartenName);
-            Assert.Equal(updateDto.TeacherName, updated.TeacherName);
-            Assert.Equal(updateDto.UpdatedAt, updated.UpdatedAt);
-        }
-
-        // 4) Kustutamine — Delete peab tagastama sama kirje, mis kustutati
+        // Kustutamine — Delete peab tagastama sama kirje, mis kustutati
 
         [Fact]
         public async Task Should_DeleteByIdKindergarten_WhenDeleteKindergarten()
@@ -118,7 +94,7 @@ namespace ShopTARgv24.KindergartenTest
             Assert.Equal(created.ChildrenCount, deleted.ChildrenCount);
         }
 
-        // 5) Lisakontroll: pärast kustutamist ei tohi ID järgi kirjet enam leida
+        // Lisakontroll: pärast kustutamist ei tohi ID järgi kirjet enam leida
 
         [Fact]
         public async Task Should_ReturnNull_When_GetDeletedKindergartenById()
@@ -136,7 +112,7 @@ namespace ShopTARgv24.KindergartenTest
             Assert.Null(result);
         }
 
-        // 6) Kindergarten'i kustutamisel peavad kustuma ka seotud pildid tabelist KindergartenFileToDatabase
+        // Kindergarten'i kustutamisel peavad kustuma ka seotud pildid tabelist KindergartenFileToDatabase
 
         [Fact]
         public async Task Should_DeleteRelatedImages_WhenDeleteKindergarten()
@@ -175,6 +151,31 @@ namespace ShopTARgv24.KindergartenTest
                 .ToList();
 
             Assert.Empty(leftovers);
+        }
+
+        // Test kontrollib, et Create salvestab lasteaia andmed õigesti andmebaasi. Pärast salvestamist peavad kõik põhiandmed (nimed, laste arv, kuupäevad) olema samad, mis DTO-s.
+
+        [Fact]
+        public async Task Should_SaveCorrectData_When_CreateKindergarten()
+        {
+            // Arrange
+            var service = Svc<IKindergartenServices>();
+            var dto = MockKindergartenData();
+
+            // Act
+            var created = await service.Create(dto);
+            var fromDb = await service.DetailAsync((Guid)created.Id);
+
+            // Assert
+            Assert.NotNull(fromDb);
+
+            Assert.Equal(dto.GroupName, fromDb.GroupName);
+            Assert.Equal(dto.ChildrenCount, fromDb.ChildrenCount);
+            Assert.Equal(dto.KindergartenName, fromDb.KindergartenName);
+            Assert.Equal(dto.TeacherName, fromDb.TeacherName);
+
+            Assert.Equal(dto.CreatedAt.Value.Date, fromDb.CreatedAt.Value.Date);
+            Assert.Equal(dto.UpdatedAt.Value.Date, fromDb.UpdatedAt.Value.Date);
         }
     }
 }

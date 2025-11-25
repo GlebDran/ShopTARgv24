@@ -14,5 +14,9 @@ namespace ShopTARgv24.Core.Dto
             = new List<FileToDatabaseDto>();
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
+        public object Name { get; set; }
+        public object GroupCount { get; set; }
+        public object Address { get; set; }
+        public object ModifiedAt { get; set; }
     }
 }
