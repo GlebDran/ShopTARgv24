@@ -28,6 +28,8 @@ namespace ShopTARgv24
 
             builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
 
+            builder.Services.AddScoped<IEmailServices, EmailServices>();
+
             var app = builder.Build();
 
             if (!app.Environment.IsDevelopment())
