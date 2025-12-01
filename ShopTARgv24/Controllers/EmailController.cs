@@ -1,15 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MailKit;
+using Microsoft.AspNetCore.Mvc;
 using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Core.Dto;
+using ShopTARgv24.Core.ServiceInterface;
+using ShopTARgv24.Models.Email;
 
 namespace ShopTARgv24.Controllers
 {
     public class EmailController : Controller
     {
-        // 1. Объявляем переменную для сервиса
-        private readonly EmailServices _emailServices;
-        // 2. Внедряем сервис через конструктор (Dependency Injection)
-        public EmailController(EmailServices emailServices)
+        private readonly IEmailServices _emailServices;
+
+        public EmailController
+            (
+                IEmailServices emailServices
+            )
         {
             _emailServices = emailServices;
         }
@@ -18,18 +23,21 @@ namespace ShopTARgv24.Controllers
             return View();
         }
 
-        //teha meetod nimega SendEmail, mis votab vastu EmailDto objekti
-        //kasutab EmailServices klassi, et saata emaili
-
-        // POST: Принимает данные из формы и отправляет письмо
         [HttpPost]
-        public IActionResult SendEmail(EmailDto dto)
+        public IActionResult SendEmail(EmailViewModel vm)
         {
-            // Вызываем метод отправки из сервиса
+            var files = Request.Form.Files.Any() ? Request.Form.Files.ToList() : new List<IFormFile>();
+
+            var dto = new EmailDto
+            {
+                To = vm.To,
+                Subject = vm.Subject,
+                Body = vm.Body,
+                Attachment = files
+            };
+
             _emailServices.SendEmail(dto);
 
-            // После отправки возвращаем пользователя на ту же страницу
-            // (или можно перенаправить на страницу "Спасибо")
             return RedirectToAction(nameof(Index));
         }
 
