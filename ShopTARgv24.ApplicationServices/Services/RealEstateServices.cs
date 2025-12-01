@@ -45,28 +45,29 @@ namespace ShopTARgv24.ApplicationServices.Services
             return domain;
         }
 
-        public async Task<RealEstate?> Update(RealEstateDto dto)
+        public async Task<RealEstate> Update(RealEstateDto dto)
         {
+            RealEstate domain = new RealEstate();
 
-            if (dto.Id == null || dto.Id == Guid.Empty)
-                return null;
+            domain.Id = dto.Id;
+            domain.Area = dto.Area;
+            domain.Location = dto.Location;
+            domain.RoomNumber = dto.RoomNumber;
+            domain.BuildingType = dto.BuildingType;
+            domain.CreatedAt = dto.CreatedAt;
+            domain.ModifiedAt = DateTime.Now;
 
-            var entity = await _context.RealEstate
-                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+            if (dto.Files != null)
+            {
+                _fileServices.UploadFilesToDatabase(dto, domain);
+            }
 
-            if (entity == null)
-                return null;
-
-            entity.Area = dto.Area;
-            entity.Location = dto.Location;
-            entity.RoomNumber = dto.RoomNumber;
-            entity.BuildingType = dto.BuildingType;
-            entity.ModifiedAt = dto.ModifiedAt ?? DateTime.Now;
-
+            _context.RealEstate.Update(domain);
             await _context.SaveChangesAsync();
 
-            return entity;
+            return domain;
         }
+
         public async Task<RealEstate> DetailAsync(Guid id)
         {
             var result = await _context.RealEstate
@@ -75,26 +76,25 @@ namespace ShopTARgv24.ApplicationServices.Services
             return result;
         }
 
-        public async Task<RealEstate?> Delete(Guid id)
+        public async Task<RealEstate> Delete(Guid id)
         {
-            var entity = await _context.RealEstate
+            var result = await _context.RealEstate
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (entity == null)
-                return null;
-
             var images = await _context.FileToDatabases
-                 .Where(f => f.RealEstateId == id)
-                 .ToListAsync();
+                .Where(x => x.RealEstateId == id)
+                .Select(x => new FileToDatabaseDto
+                {
+                    Id = x.Id,
+                    ImageTitle = x.ImageTitle,
+                    RealEstateId = x.RealEstateId
+                }).ToArrayAsync();
 
-            if (images.Count > 0)
-                _context.FileToDatabases.RemoveRange(images);
-
-            _context.RealEstate.Remove(entity);
-
+            await _fileServices.RemoveImagesFromDatabase(images);
+            _context.RealEstate.Remove(result);
             await _context.SaveChangesAsync();
 
-            return entity;
+            return result;
         }
     }
 }

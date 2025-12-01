@@ -1,4 +1,4 @@
-﻿using MailKit.Net.Smtp; // Нужно добавить этот using для SmtpClient
+﻿using MailKit.Net.Smtp;
 using Microsoft.Extensions.Configuration;
 using MimeKit;
 using ShopTARgv24.Core.Dto;
