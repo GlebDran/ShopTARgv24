@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using ShopTARgv24.ApplicationServices.Services;
 using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
+using ShopTARgv24.Hubs;
 
 namespace ShopTARgv24
 {
@@ -11,6 +13,7 @@ namespace ShopTARgv24
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             builder.Services.AddScoped<ISpaceshipsServices, SpaceshipsServices>();
@@ -18,36 +21,49 @@ namespace ShopTARgv24
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             builder.Services.AddScoped<IWeatherForecastServices, WeatherForecastServices>();
 
+
+
+
             builder.Services.AddDbContext<ShopTARgv24Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-            builder.Services.AddHttpClient<ICocktailService, CocktailService>(client =>
-            {
-                client.BaseAddress = new Uri("https://www.thecocktaildb.com/api/json/v1/1/");
-            });
-
+            builder.Services.AddScoped<IChuckNorrisServices, ChuckNorrisServices>();
             builder.Services.AddHttpClient<IChuckNorrisServices, ChuckNorrisServices>();
+
+            builder.Services.AddScoped<ICocktailService, CocktailService>();
+            builder.Services.AddHttpClient<ICocktailService, CocktailService>();
 
             builder.Services.AddScoped<IEmailServices, EmailServices>();
 
+            builder.Services.AddSignalR();
+
             var app = builder.Build();
 
+            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+
                 app.UseHsts();
             }
-
+            app.UseStatusCodePagesWithReExecute("/Home/NotFound", "?code={0}");
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
             app.UseRouting();
+
+
             app.UseAuthorization();
+            app.UseStaticFiles();
+
+
 
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }
