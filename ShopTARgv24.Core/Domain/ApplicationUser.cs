@@ -1,0 +1,10 @@
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace ShopTARgv24.Core.Domain
+{
+    public class ApplicationUser : IdentityUser
+    {
+        public string? Name { get; set; }
+        public string? City { get; set; }
+    }
+}

@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ShopTARgv24.Core.Dto;
 using ShopTARgv24.Core.ServiceInterface;
 using ShopTARgv24.Data;
 using ShopTARgv24.Models.RealEstate;
-using ShopTARgv24.Models.Spaceships;
 
 
 namespace ShopTARgv24.Controllers
@@ -27,6 +27,8 @@ namespace ShopTARgv24.Controllers
             _fileServices = fileServices;
         }
 
+
+        //[Authorize(Roles = "Admin")]
         public IActionResult Index()
         {
             var result = _context.RealEstate
@@ -78,13 +80,14 @@ namespace ShopTARgv24.Controllers
             };
 
             var result = await _realEstateServices.Create(dto);
+            var realEstateId = result.Id;
 
             if (result == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Update), new { id = realEstateId });
         }
 
         [HttpGet]
@@ -130,16 +133,27 @@ namespace ShopTARgv24.Controllers
                 Location = vm.Location,
                 CreatedAt = vm.CreatedAt,
                 ModifiedAt = vm.ModifiedAt,
+                Files = vm.Files,
+                Image = vm.Image
+                    .Select(x => new FileToDatabaseDto
+                    {
+                        Id = x.ImageId,
+                        ImageData = x.ImageData,
+                        ImageTitle = x.ImageTitle,
+                        RealEstateId = x.RealEstateId
+                    }).ToArray()
             };
 
             var result = await _realEstateServices.Update(dto);
+
+            var realEstateId = result.Id;
 
             if (result == null)
             {
                 return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Update), new { id = realEstateId });
         }
 
         [HttpGet]
